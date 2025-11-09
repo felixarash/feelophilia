@@ -29,28 +29,60 @@ export default function CheckoutPage() {
     address: ''
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Generate order number
+    setSubmitting(true);
+    setSubmitError(null);
+
     const orderNumber = `HO-${Math.floor(10000 + Math.random() * 90000)}`;
-    
-    // Store order details
+
     const orderDetails = {
       orderNumber,
       customer: formData,
       items: cart,
       total: getCartTotal(),
-      date: new Date().toISOString()
+      currency: 'PKR',
+      date: new Date().toISOString(),
     };
-    
-    localStorage.setItem('lastOrder', JSON.stringify(orderDetails));
-    
-    // Clear cart
-    clearCart();
-    
-    // Navigate to confirmation
-    router.push('/confirmation');
+
+    try {
+      const resp = await fetch('https://formspree.io/f/xeolbykr', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          address: formData.address,
+          orderNumber: orderNumber,
+          total: getCartTotal(),
+          currency: 'PKR',
+          items: cart.map((i) => ({ id: i.id, name: i.name, qty: i.quantity, price: i.price })),
+          date: orderDetails.date,
+        }),
+      });
+
+      if (!resp.ok) {
+        const data = await resp.json().catch(() => ({}));
+        throw new Error(data?.error || 'Failed to submit order to Formspree');
+      }
+
+      // Persist locally for confirmation page
+      localStorage.setItem('lastOrder', JSON.stringify(orderDetails));
+      // Clear cart and navigate
+      clearCart();
+      router.push('/confirmation');
+    } catch (err: any) {
+      setSubmitError(err.message || 'Submission failed');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -97,7 +129,7 @@ export default function CheckoutPage() {
             {cart.map(item => (
               <HStack key={item.id} justify="space-between">
                 <Text>{item.name} × {item.quantity}</Text>
-                <Text fontWeight="bold">${(item.price * item.quantity).toFixed(2)}</Text>
+                <Text fontWeight="bold">PKR {(item.price * item.quantity).toFixed(2)}</Text>
               </HStack>
             ))}
           </VStack>
@@ -106,7 +138,7 @@ export default function CheckoutPage() {
             <HStack justify="space-between">
               <Text fontSize="xl" fontWeight="bold">Total:</Text>
               <Text fontSize="xl" fontWeight="bold" color="green.600">
-                ${getCartTotal().toFixed(2)}
+                PKR {getCartTotal().toFixed(2)}
               </Text>
             </HStack>
           </Box>
@@ -184,6 +216,7 @@ export default function CheckoutPage() {
                 colorPalette="green"
                 size="lg"
                 w="full"
+                loading={submitting}
               >
                 Place Order
               </Button>
@@ -196,6 +229,10 @@ export default function CheckoutPage() {
               >
                 Back to Cart
               </Button>
+
+              {submitError && (
+                <Text color="red.600" fontSize="sm">{submitError}</Text>
+              )}
             </VStack>
           </VStack>
         </Box>

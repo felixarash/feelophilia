@@ -57,7 +57,7 @@ export default function ProductCard({ product }: { product: Product }) {
           
           <Box display="flex" justifyContent="space-between" alignItems="center">
             <Text fontSize="xl" fontWeight="bold" color="green.600">
-              ${product.price.toFixed(2)}
+              PKR {product.price.toFixed(2)}
             </Text>
             
             <Button

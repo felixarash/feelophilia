@@ -75,7 +75,7 @@ export default function ProductDetailPage() {
                   {product.name}
                 </Heading>
                 <Text fontSize="3xl" fontWeight="bold" color="green.600">
-                  ${product.price.toFixed(2)}
+                  PKR {product.price.toFixed(2)}
                 </Text>
               </Box>
 

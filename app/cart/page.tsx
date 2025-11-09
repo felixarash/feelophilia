@@ -76,7 +76,7 @@ export default function CartPage() {
                     {item.name}
                   </Heading>
                   <Text fontSize="lg" fontWeight="bold" color="green.600">
-                    ${item.price.toFixed(2)}
+                    PKR {item.price.toFixed(2)}
                   </Text>
 
                   <HStack gap={3} mt={2}>
@@ -129,7 +129,7 @@ export default function CartPage() {
                     Subtotal
                   </Text>
                   <Text fontSize="xl" fontWeight="bold">
-                    ${(item.price * item.quantity).toFixed(2)}
+                    PKR {(item.price * item.quantity).toFixed(2)}
                   </Text>
                 </VStack>
               </HStack>
@@ -144,7 +144,7 @@ export default function CartPage() {
           <VStack gap={4} align="stretch">
             <HStack justify="space-between">
               <Text fontSize="lg">Subtotal:</Text>
-              <Text fontSize="lg">${getCartTotal().toFixed(2)}</Text>
+              <Text fontSize="lg">PKR {getCartTotal().toFixed(2)}</Text>
             </HStack>
             
             <HStack justify="space-between">
@@ -157,7 +157,7 @@ export default function CartPage() {
             <HStack justify="space-between">
               <Text fontSize="2xl" fontWeight="bold">Total:</Text>
               <Text fontSize="2xl" fontWeight="bold" color="green.600">
-                ${getCartTotal().toFixed(2)}
+                PKR {getCartTotal().toFixed(2)}
               </Text>
             </HStack>
 

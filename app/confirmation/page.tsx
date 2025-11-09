@@ -87,14 +87,14 @@ export default function ConfirmationPage() {
     orderDetails.items.forEach((item) => {
       doc.text(`${item.name}`, 20, yPos);
       doc.text(`Qty: ${item.quantity}`, 100, yPos);
-      doc.text(`$${(item.price * item.quantity).toFixed(2)}`, 150, yPos);
+      doc.text(`PKR ${(item.price * item.quantity).toFixed(2)}`, 150, yPos);
       yPos += 7;
     });
     
     // Total
     yPos += 10;
     doc.setFontSize(14);
-    doc.text(`Total: $${orderDetails.total.toFixed(2)}`, 20, yPos);
+    doc.text(`Total: PKR ${orderDetails.total.toFixed(2)}`, 20, yPos);
     
     // Footer
     doc.setFontSize(10);
@@ -155,7 +155,7 @@ export default function ConfirmationPage() {
             {orderDetails.items.map((item) => (
               <HStack key={item.id} justify="space-between">
                 <Text>{item.name} × {item.quantity}</Text>
-                <Text fontWeight="bold">${(item.price * item.quantity).toFixed(2)}</Text>
+                <Text fontWeight="bold">PKR {(item.price * item.quantity).toFixed(2)}</Text>
               </HStack>
             ))}
             
@@ -163,7 +163,7 @@ export default function ConfirmationPage() {
               <HStack justify="space-between">
                 <Text fontSize="xl" fontWeight="bold">Total:</Text>
                 <Text fontSize="xl" fontWeight="bold" color="green.600">
-                  ${orderDetails.total.toFixed(2)}
+                  PKR {orderDetails.total.toFixed(2)}
                 </Text>
               </HStack>
             </Box>
