@@ -1,0 +1,12 @@
+:root {
+  /* Align with Chakra light mode */
+  --background: #f7fafc; /* gray.50 */
+  --foreground: #1a202c; /* gray.800 */
+}
+
+/* Force a consistent light theme background/foreground to match Chakra */
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
